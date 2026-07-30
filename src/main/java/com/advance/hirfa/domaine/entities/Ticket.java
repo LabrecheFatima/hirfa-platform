@@ -8,33 +8,43 @@ import org.springframework.data.annotation.LastModifiedBy;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name= "ticket_validations")
+@Table(name= "tickets")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketValidation {
+public class Ticket {
     @Id
-    @Column(name= "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name= "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name= "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketValidationEnum status;
+    private TicketStatusEnum status;
 
-    @Column(name= "validation_method", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private TicketValidationMethod validationMethod;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "ticket_type_id")
+    private TicketType ticketType;
 
     @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name= "ticket_id")
-    private Ticket ticket;
+    @JoinColumn(name= "purchase_id")
+    private User purchase;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    private List<TicketValidation> validation= new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    private List<QrCode> qrCodes= new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -47,12 +57,12 @@ public class TicketValidation {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        TicketValidation that = (TicketValidation) o;
-        return Objects.equals(id, that.id) && status == that.status && validationMethod == that.validationMethod && Objects.equals(createAt, that.createAt) && Objects.equals(updateAt, that.updateAt);
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(id, ticket.id) && status == ticket.status && Objects.equals(ticketType, ticket.ticketType) && Objects.equals(createAt, ticket.createAt) && Objects.equals(updateAt, ticket.updateAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, createAt, updateAt);
+        return Objects.hash(id, status, ticketType, createAt, updateAt);
     }
 }

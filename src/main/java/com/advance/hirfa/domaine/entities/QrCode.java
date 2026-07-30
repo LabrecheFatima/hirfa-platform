@@ -1,6 +1,5 @@
 package com.advance.hirfa.domaine.entities;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,25 +11,24 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name= "ticket_validations")
+@Table(name= "qrcode")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketValidation {
+public class QrCode {
     @Id
-    @Column(name= "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name= "status", nullable = false)
+    @Column(name="status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketValidationEnum status;
+    private QrCodeStatusEnum status;
 
-    @Column(name= "validation_method", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private TicketValidationMethod validationMethod;
+    @Column(name="value", nullable = false)
+    private String value;
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name= "ticket_id")
@@ -47,12 +45,12 @@ public class TicketValidation {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        TicketValidation that = (TicketValidation) o;
-        return Objects.equals(id, that.id) && status == that.status && validationMethod == that.validationMethod && Objects.equals(createAt, that.createAt) && Objects.equals(updateAt, that.updateAt);
+        QrCode qrCode = (QrCode) o;
+        return Objects.equals(id, qrCode.id) && status == qrCode.status && Objects.equals(value, qrCode.value) && Objects.equals(createAt, qrCode.createAt) && Objects.equals(updateAt, qrCode.updateAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, createAt, updateAt);
+        return Objects.hash(id, status, value, createAt, updateAt);
     }
 }

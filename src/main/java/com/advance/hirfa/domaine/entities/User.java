@@ -1,4 +1,4 @@
-package com.advance.hirfa.domaine;
+package com.advance.hirfa.domaine.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,9 +38,11 @@ public class User {
     @Column(name = "updated_at", updatable = false)
     private LocalDate updateAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
     private List<Event> organizedEvents= new ArrayList<>();
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name= "user_attending_events",
@@ -50,6 +52,7 @@ public class User {
 
     private List<Event> attendingEvents= new ArrayList<>();
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name= "user_sttafing_events",
