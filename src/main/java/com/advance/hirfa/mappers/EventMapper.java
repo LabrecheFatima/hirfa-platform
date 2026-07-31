@@ -2,6 +2,8 @@ package com.advance.hirfa.mappers;
 
 import com.advance.hirfa.domaine.CreateEventRequest;
 import com.advance.hirfa.domaine.CreateTicketTypeRequest;
+import com.advance.hirfa.domaine.UpdatedEventRequest;
+import com.advance.hirfa.domaine.UpdatedTicketTypeRequest;
 import com.advance.hirfa.domaine.dto.*;
 import com.advance.hirfa.domaine.entities.Event;
 import com.advance.hirfa.domaine.entities.TicketType;
@@ -25,4 +27,12 @@ public interface EventMapper {
     GetEventTicketTypeResponseDto toGetEventTicketTypeResponseDto(TicketType ticketType);
 
     GetEventDetailsResponseDto toGetEventDetailsResponseDto(Event event);
+
+    UpdatedTicketTypeRequest fromDto(UpdateTicketTypeRequestDto dto);
+
+    UpdatedEventRequest fromDto(UpdateEventRequestDto dto);
+
+    UpdateTicketTypeResponseDto toUpdateTicketTypeResponseDto(TicketType ticketType);
+
+    UpdateEventResponseDto toUpdateEventResponseDto(Event event);
 }

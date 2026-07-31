@@ -1,10 +1,8 @@
 package com.advance.hirfa.controllers;
 
 import com.advance.hirfa.domaine.CreateEventRequest;
-import com.advance.hirfa.domaine.dto.CreateEventRequestDto;
-import com.advance.hirfa.domaine.dto.CreateEventResponseDto;
-import com.advance.hirfa.domaine.dto.GetEventDetailsResponseDto;
-import com.advance.hirfa.domaine.dto.ListEventResponseDto;
+import com.advance.hirfa.domaine.UpdatedEventRequest;
+import com.advance.hirfa.domaine.dto.*;
 import com.advance.hirfa.domaine.entities.Event;
 import com.advance.hirfa.mappers.EventMapper;
 import com.advance.hirfa.services.EventService;
@@ -39,6 +37,24 @@ public class EventController {
         CreateEventResponseDto createEventResponseDto = eventMapper.toDto(createdEvent);
 
         return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping(path = "/{eventId}")
+    public ResponseEntity<UpdateEventResponseDto> updateEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto) {
+
+        UpdatedEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
+        UUID userId = parseUserId(jwt);
+
+        Event updatedEvent = eventService.updateEventForOrganizer(
+                userId, eventId, updateEventRequest
+        );
+
+        UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDto(updatedEvent);
+
+        return ResponseEntity.ok(updateEventResponseDto);
     }
 
     @GetMapping
