@@ -3,6 +3,7 @@ package com.advance.hirfa.services.impl;
 import com.advance.hirfa.domaine.entities.QrCode;
 import com.advance.hirfa.domaine.entities.QrCodeStatusEnum;
 import com.advance.hirfa.domaine.entities.Ticket;
+import com.advance.hirfa.exceptions.QrCodeNotFoundExceptions;
 import com.advance.hirfa.repository.QrCodeRepository;
 import com.advance.hirfa.services.QrCodeService;
 import com.google.zxing.BarcodeFormat;
@@ -11,6 +12,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
@@ -23,6 +25,7 @@ import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QrCodeServiceImpl implements QrCodeService {
 
     private static final int QR_WIDTH = 300;
@@ -48,7 +51,22 @@ public class QrCodeServiceImpl implements QrCodeService {
         } catch (WriterException | IOException e) {
             throw new RuntimeException("Failed to generate QR code for ticket", e);
         }
-    }private String generateQrCodeImage(UUID uniqueId) throws WriterException, IOException {
+    }
+
+    @Override
+    public byte[] getQrCodeImageForUserAndTicket(UUID userId, UUID ticketId) {
+        QrCode qrCode = qrCodeRepository.findByTicketIdAndTicketPurchseId(ticketId, userId)
+                .orElseThrow(QrCodeNotFoundExceptions::new);
+
+        try {
+            return Base64.getDecoder().decode(qrCode.getValue());
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid base64 QR Code for ticket ID: {}", ticketId, ex);
+            throw new QrCodeNotFoundExceptions();
+        }
+    }
+
+    private String generateQrCodeImage(UUID uniqueId) throws WriterException, IOException {
         BitMatrix bitMatrix = qrCodeWriter.encode(
                 uniqueId.toString(),
                 BarcodeFormat.QR_CODE,

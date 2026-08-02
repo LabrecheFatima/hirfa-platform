@@ -87,6 +87,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(TicketNotFoundExceptions.class)
+    public ResponseEntity<ErrorDto> handleTicketNotFoundExecption(
+            TicketNotFoundExceptions ex
+    ) {
+        log.error("Ticket not found", ex);
+        ErrorDto errorDto = new ErrorDto();
+
+        errorDto.setError("Ticket not found");
+
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(QrCodeGenerationExceptions.class)
     public ResponseEntity<ErrorDto> handleQrCodeGenerationException(
