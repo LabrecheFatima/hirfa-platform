@@ -1,10 +1,7 @@
 package com.advance.hirfa.controllers;
 
 import com.advance.hirfa.domaine.dto.ErrorDto;
-import com.advance.hirfa.exceptions.EventNotFoundExceptions;
-import com.advance.hirfa.exceptions.EventUpdateNotFoundExceptions;
-import com.advance.hirfa.exceptions.TickedTypeNotFoundExceptions;
-import com.advance.hirfa.exceptions.UserNotFoundExceptions;
+import com.advance.hirfa.exceptions.*;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -66,9 +63,46 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(TickedTypeNotFoundExceptions.class)
+    @ExceptionHandler(QrCodeNotFoundExceptions.class)
+    public ResponseEntity<ErrorDto> handleQrCodeNotFoundException(
+            QrCodeNotFoundExceptions ex
+    ) {
+        log.error("Caught QrCode Not Found", ex);
+        ErrorDto errorDto = new ErrorDto();
+
+        errorDto.setError("Qr code not found");
+
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(TicketSoldOutExceptions.class)
+    public ResponseEntity<ErrorDto> handleTicketSoldOutException(
+            TicketSoldOutExceptions ex
+    ) {
+        log.error("Ticket solde out", ex);
+        ErrorDto errorDto = new ErrorDto();
+
+        errorDto.setError("Ticket solde out");
+
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @ExceptionHandler(QrCodeGenerationExceptions.class)
+    public ResponseEntity<ErrorDto> handleQrCodeGenerationException(
+            QrCodeGenerationExceptions ex
+    ) {
+        log.error("Caught QrCodeGenerationExceptions", ex);
+        ErrorDto errorDto = new ErrorDto();
+
+        errorDto.setError("Unable to generate QR code");
+
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(TicketTypeNotFoundExceptions.class)
     public ResponseEntity<ErrorDto> handleTicketTypeNotFoundException(
-            TickedTypeNotFoundExceptions ex
+            TicketTypeNotFoundExceptions ex
     ) {
         log.error("Caught ticket type Not Found", ex);
         ErrorDto errorDto = new ErrorDto();

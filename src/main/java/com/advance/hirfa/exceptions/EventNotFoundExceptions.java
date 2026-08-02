@@ -11,7 +11,6 @@ public class EventNotFoundExceptions extends EventTicketException{
     public EventNotFoundExceptions(String message, Throwable cause) {
         super(message, cause);
     }
-
     public EventNotFoundExceptions(Throwable cause) {
         super(cause);
     }

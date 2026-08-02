@@ -4,10 +4,11 @@ import com.advance.hirfa.domaine.CreateEventRequest;
 import com.advance.hirfa.domaine.UpdatedEventRequest;
 import com.advance.hirfa.domaine.UpdatedTicketTypeRequest;
 import com.advance.hirfa.domaine.entities.Event;
+import com.advance.hirfa.domaine.entities.EventStatusEnum;
 import com.advance.hirfa.domaine.entities.TicketType;
 import com.advance.hirfa.domaine.entities.User;
 import com.advance.hirfa.exceptions.EventUpdateNotFoundExceptions;
-import com.advance.hirfa.exceptions.TickedTypeNotFoundExceptions;
+import com.advance.hirfa.exceptions.TicketTypeNotFoundExceptions;
 import com.advance.hirfa.exceptions.UserNotFoundExceptions;
 import com.advance.hirfa.repository.EventRepository;
 import com.advance.hirfa.repository.UserRepository;
@@ -130,7 +131,7 @@ public class EventServiceImpl implements EventService {
                 existingTicketType.setTotalAvailable(ticketType.getTotalAvailable());
 
             } else {
-                throw new TickedTypeNotFoundExceptions(String.format(
+                throw new TicketTypeNotFoundExceptions(String.format(
                         "Ticket type with ID '%s' does not exist", ticketType.getId()
                 ));
             }
@@ -147,6 +148,21 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public void deleteEventForOrganizer(UUID organizerId, UUID id) {
         getEventForOrganizer(organizerId, id).ifPresent(eventRepository::delete);
+    }
+
+    @Override
+    public Page<Event> listPublishedEvent(Pageable pageable) {
+        return eventRepository.findByStatus(EventStatusEnum.PUBLISHED, pageable);
+    }
+
+    @Override
+    public Page<Event> searchPublishedEvents(String query, Pageable pageable) {
+        return eventRepository.searchEvents(query, pageable);
+    }
+
+    @Override
+    public Optional<Event> getPublishedEvent(UUID id) {
+        return eventRepository.findByIdAndStatus(id, EventStatusEnum.PUBLISHED);
     }
 
 
