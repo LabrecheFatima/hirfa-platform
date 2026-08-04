@@ -4,7 +4,6 @@ import com.advance.hirfa.filter.UserProvisioningFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,8 +23,11 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/api/v1/published-events/**").permitAll()
-                        .requestMatchers("/api/v1/events").hasRole("ORGANIZER")
-                        .requestMatchers("/api/v1/ticket-validations").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/events/*/ticket-types/*/tickets").hasAuthority("ATTENDEE_ROLE")
+                        .requestMatchers("/api/v1/events/**").hasAuthority("ORGANISER_ROLE")
+                        .requestMatchers("/api/v1/ticket-validations/**").hasAnyAuthority("STAFF_ROLE", "ORGANISER_ROLE")
+                        .requestMatchers("/api/v1/tickets/**", "/api/v1/my-tickets/**", "/api/v1/claims/**").hasAuthority("ATTENDEE_ROLE")
+
                         // catch all rule
                         .anyRequest().authenticated()
                 )

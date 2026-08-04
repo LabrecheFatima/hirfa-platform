@@ -55,7 +55,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 
     @Override
     public byte[] getQrCodeImageForUserAndTicket(UUID userId, UUID ticketId) {
-        QrCode qrCode = qrCodeRepository.findByTicketIdAndTicketPurchseId(ticketId, userId)
+        QrCode qrCode = qrCodeRepository.findByTicketIdAndTicketPurchaseId(ticketId, userId)
                 .orElseThrow(QrCodeNotFoundExceptions::new);
 
         try {

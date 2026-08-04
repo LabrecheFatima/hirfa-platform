@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface QrCodeRepository extends JpaRepository<QrCode, UUID> {
-    Optional<QrCode> findByTicketIdAndTicketPurchseId(UUID ticketId, UUID ticketPurchase);
+    Optional<QrCode> findByTicketIdAndTicketPurchaseId(UUID ticketId, UUID ticketPurchaseId);
 
     Optional<QrCode> findByIdAndStatus(UUID id, QrCodeStatusEnum status);
 }

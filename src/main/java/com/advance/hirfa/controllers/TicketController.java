@@ -1,4 +1,4 @@
-package com.advance.hirfa.config;
+package com.advance.hirfa.controllers;
 
 import com.advance.hirfa.domaine.dto.GetTicketResponseDto;
 import com.advance.hirfa.domaine.dto.ListTicketResponseDto;

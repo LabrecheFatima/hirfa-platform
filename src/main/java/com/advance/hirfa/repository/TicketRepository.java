@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, UUID> {
-    int countByTicketType(UUID ticketTypeId);
+    int countByTicketTypeId(UUID ticketTypeId);
 
     Page<Ticket> findByPurchaseId(UUID purchaserId, Pageable pageable);
 

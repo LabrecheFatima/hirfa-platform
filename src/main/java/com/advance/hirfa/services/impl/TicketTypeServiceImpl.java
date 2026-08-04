@@ -41,7 +41,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                         String.format("Ticket type with ID %s was not found", ticketTypeId)
                 ));
 
-        int purchasedTickets = ticketRepository.countByTicketType(ticketType.getId());
+        int purchasedTickets = ticketRepository.countByTicketTypeId(ticketType.getId());
         Integer totalAvailable = ticketType.getTotalAvailable();
 
         if (purchasedTickets + 1 > totalAvailable) {
