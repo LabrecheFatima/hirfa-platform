@@ -30,6 +30,9 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private TicketStatusEnum status;
 
+    @Column(name = "chargily_checkout_id")
+    private String chargilyCheckoutId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "ticket_type_id")
     private TicketType ticketType;
@@ -40,11 +43,11 @@ public class Ticket {
 
     @Builder.Default
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-    private List<TicketValidation> validation= new ArrayList<>();
+    private List<TicketValidation> validation = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-    private List<QrCode> qrCodes= new ArrayList<>();
+    private List<QrCode> qrCodes = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

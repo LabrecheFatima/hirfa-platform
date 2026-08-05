@@ -1,6 +1,8 @@
 package com.advance.hirfa.controllers;
 
+import com.advance.hirfa.domaine.dto.PurchaseTicketResponseDto;
 import com.advance.hirfa.services.TicketTypeService;
+import com.advance.hirfa.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +24,13 @@ public class TicketTypeController {
     private final TicketTypeService ticketTypeService;
 
     @PostMapping(path = "/{ticketTypeId}/tickets")
-    public ResponseEntity<Void> purchaseTicket(
+    public ResponseEntity<PurchaseTicketResponseDto> purchaseTicket(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable UUID ticketTypeId)
     {
-        UUID userId = parseUserId(jwt);
-        ticketTypeService.purchaseTicket(userId, ticketTypeId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        UUID userId = JwtUtil.parseUserId(jwt);
+        PurchaseTicketResponseDto response = ticketTypeService.purchaseTicket(userId, ticketTypeId);
+        return ResponseEntity.ok(response);
     }
 
     private UUID parseUserId(Jwt jwt) {

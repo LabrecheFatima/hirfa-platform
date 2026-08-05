@@ -2,6 +2,7 @@ package com.advance.hirfa.config;
 
 import com.advance.hirfa.filter.UserProvisioningFilter;
 import org.springframework.context.annotation.Bean;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,7 +23,11 @@ public class SecurityConfig {
             JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        // public endpoints
                         .requestMatchers(HttpMethod.GET, "/api/v1/published-events/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/payments/chargily/webhook").permitAll()
+
+                        // role endpoints
                         .requestMatchers(HttpMethod.POST, "/api/v1/events/*/ticket-types/*/tickets").hasAuthority("ATTENDEE_ROLE")
                         .requestMatchers("/api/v1/events/**").hasAuthority("ORGANISER_ROLE")
                         .requestMatchers("/api/v1/ticket-validations/**").hasAnyAuthority("STAFF_ROLE", "ORGANISER_ROLE")
@@ -52,5 +57,10 @@ public class SecurityConfig {
         return NimbusJwtDecoder
                 .withJwkSetUri("http://localhost:9090/realms/app-realm/protocol/openid-connect/certs")
                 .build();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }
